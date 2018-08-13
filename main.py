@@ -3,6 +3,9 @@
 from scrape_search import search_products, Product
 
 def webhook(request):
+
+    req_json = request.get_json()
+
     if request.args and 'text' in request.args:
         text = request.args.get('text')
         products = search_products(text)
@@ -12,8 +15,8 @@ def webhook(request):
             answer += p.__str__()
         return f'articles: {answer}'
 
-    elif request.get_json:
-        return request.get_json
+    elif req_json:
+        return req_json
 
     else:
         return 'wrong usage: please specify a request parameter called text.'
