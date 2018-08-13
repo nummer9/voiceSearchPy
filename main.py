@@ -16,7 +16,7 @@ def webhook(request):
         return f'articles: {answer}'
 
     elif req_json:
-        return req_json
+        return f'{req_json}'
 
     else:
         return 'wrong usage: please specify a request parameter called text.'

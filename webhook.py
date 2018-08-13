@@ -9,6 +9,11 @@ webhook = Flask(__name__)
 def main():
     return "use /search?text=* to search for products."
 
+@webhook.route("/json", methods=['GET', 'POST'])
+def get_json():
+    req_json = request.get_json()
+    return f'{req_json}'
+
 @webhook.route("/search")
 def search():
     text = request.args.get("text")
