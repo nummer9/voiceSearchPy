@@ -1,3 +1,5 @@
+"""local usage"""
+
 from flask import Flask, request
 from scrape_search import search_products, Product
 

@@ -1,3 +1,5 @@
+"""For GCP Usage"""
+
 from scrape_search import search_products, Product
 
 def webhook(request):
@@ -12,6 +14,6 @@ def webhook(request):
 
     elif request.get_json():
         return request.get_json()
-        
+
     else:
         return 'wrong usage: please specify a request parameter called text.'
