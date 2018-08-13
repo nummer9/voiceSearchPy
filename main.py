@@ -12,8 +12,8 @@ def webhook(request):
             answer += p.__str__()
         return f'articles: {answer}'
 
-    elif request.get_json():
-        return request.get_json()
+    elif request.get_json:
+        return request.get_json
 
     else:
         return 'wrong usage: please specify a request parameter called text.'
