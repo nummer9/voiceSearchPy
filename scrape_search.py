@@ -1,5 +1,6 @@
 from bs4 import BeautifulSoup as soup
 from urllib.request import urlopen as uReq
+from urllib import parse 
 import json
 import argparse
 
@@ -15,7 +16,7 @@ class Product:
             self.article_nr, self.name)
 
 def fetch_html(text):
-    search_url = "https://www.otto.de/suche/" + text
+    search_url = "https://www.otto.de/suche/" + parse.quote_plus(text)
     uClient = uReq(search_url)
     html = uClient.read()
     uClient.close()

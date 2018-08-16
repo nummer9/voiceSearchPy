@@ -11,5 +11,5 @@ WORKDIR /app
 EXPOSE 8080
 
 ENTRYPOINT ["python3"]
-CMD ["webhook.py"]
+CMD ["local_webhook.py"]
 
