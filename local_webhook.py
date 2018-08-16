@@ -5,7 +5,7 @@ from controller import handle_request
 
 webhook = Flask(__name__)
 
-@webhook.route("/", methods=['GET', 'POST'])
+@webhook.route("/", methods=['POST'])
 def main():
     return handle_request(request)
 
