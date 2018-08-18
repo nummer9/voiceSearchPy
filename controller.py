@@ -1,6 +1,8 @@
-from scrape_search import search_products, Product
+from scrape_search import search_products
+from df_search_response import make_search_response
 import json
 import logging
+from product import Product
 
 def handle_request(request):
     req_json = request.get_json()
@@ -35,53 +37,4 @@ def handle_search_product_intent(def_req):
         logging.error(f'no products found for text: "{text}"')
         return f'no products found for text: "{text}"'
 
-    return make_search_response(products[0], session)
-
-def make_search_response(product, session):
-
-    resp_items = [
-        {
-            "simpleResponse": {
-                "textToSpeech": f'<speak>Ich habe den folgenden Artikel für dich gefunden: {product.name}</speak>',
-                "displayText": product.name
-            }
-        }, {
-            "basicCard": {
-                "title": product.name,
-                "image": {
-                    "url": product.image_url,
-                    "accessibilityText": "keine Vorschau"
-                }
-            }
-        }, {
-            "suggestions": [
-                {
-                    "title": "nächster Treffer"
-                }
-            ]
-        }
-    ]
-
-    resp_payload = {
-        "google": {
-            "expectUserResponse": True,
-            "richResponse": {
-                "items": resp_items
-            }
-        }
-    }
-
-    resp_out_contexts = [
-        {
-            "name": f'{session}/contexts/next_result',
-            "lifespanCount": 3
-        }
-    ]
-
-    response = {
-        "source": "Otto Voice Search",
-        "payload": resp_payload,
-        "outputContexts": resp_out_contexts
-    }
-
-    return json.dumps(response, ensure_ascii=False).encode('utf8')
+    return make_search_response(products, session)

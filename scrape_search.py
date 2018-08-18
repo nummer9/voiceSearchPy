@@ -3,17 +3,7 @@ from urllib.request import urlopen as uReq
 from urllib import parse 
 import json
 import argparse
-
-class Product:
-    def __init__(self, article_nr, name, price, image_url):
-        self.article_nr = article_nr
-        self.name = name
-        self.price = price
-        self.image_url = image_url
-
-    def __str__(self):
-        return "[article-number: {}, name: {}]".format(
-            self.article_nr, self.name)
+from product import Product
 
 def fetch_html(text):
     search_url = "https://www.otto.de/suche/" + parse.quote_plus(text)
