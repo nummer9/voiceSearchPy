@@ -49,11 +49,14 @@ def search_products(text):
         variations = product_json['product']['variationMap'].values()
         data = list(variations)[0]
 
+        link = data['link']['href']
+
         product = Product(
             data['articleNumber'], 
             data['name'], 
             data['formattedRetailPrice'],
-            data['imageUrl']
+            data['imageUrl'],
+            f'https://www.otto.de{link}'
             )
         products.append(product)
 

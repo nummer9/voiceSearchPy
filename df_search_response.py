@@ -1,60 +1,21 @@
 from product import Product
 import json
 from typing import List
+from df_helper import make_card_response_from_product
+import logging
 
 def make_search_response(products:list, session):
 
     product = products[0]
+    parameters = make_parameters(products)
 
-    resp_items = [
-        {
-            "simpleResponse": {
-                "textToSpeech": make_text_to_speech(product),
-                "displayText": f'{product.name} - {product.price} EUR'
-            }
-        }, {
-            "basicCard": {
-                "title": f'{product.name} - {product.price} EUR',
-                "image": {
-                    "url": product.image_url,
-                    "accessibilityText": "keine Vorschau"
-                }
-            }
-        }
-    ]
+    if len(products) == 0:
+        logging.error('no products found')
 
-    resp_payload = {
-        "google": {
-            "expectUserResponse": True,
-            "richResponse": {
-                "items": resp_items,
-                "suggestions": [
-                    {
-                        "title": "nächster Treffer"
-                    }
-                ]
-            }
-        }
-    }
+        # TODO: no article found response!
+        return make_no_products_response()
 
-    resp_out_contexts = [
-        {
-            "name": f'{session}/contexts/next_result',
-            "lifespanCount": 3,
-            "parameters": make_parameters(products)
-        }
-    ]
-
-    response = {
-        "source": "Otto Voice Search",
-        "payload": resp_payload,
-        "outputContexts": resp_out_contexts
-    }
-
-    return json.dumps(response, ensure_ascii=False).encode('utf8')
-
-def make_text_to_speech(product:Product) -> str:
-    return f'<speak>Gefunden auf otto DE: {product.name}. Der Artikel kostet {product.price} Euro</speak>'
+    return make_card_response_from_product(session, product, parameters)  
 
 def make_parameters(products:List[Product]) -> dict:
     prods = []
@@ -64,7 +25,8 @@ def make_parameters(products:List[Product]) -> dict:
             "name": prod.name,
             "price": prod.price,
             "image": prod.image_url,
-            "article-number": prod.article_nr
+            "article-number": prod.article_nr,
+            "url": prod.url
         }
         prods.append(prod)
 
@@ -74,3 +36,29 @@ def make_parameters(products:List[Product]) -> dict:
     }
 
     return parameters
+
+def make_no_products_response():
+    resp_items = [
+        {
+            "simpleResponse": {
+                "textToSpeech": "Dieses Produkt konnte ich nicht auf otto D E finden!",
+                "displayText": "Keine Produkte gefunden"
+            }
+        }
+    ]
+
+    resp_payload = {
+        "google": {
+            "expectUserResponse": True,
+            "richResponse": {
+                "items": resp_items,
+            }
+        }
+    }
+
+    response = {
+        "source": "Otto Voice Search",
+        "payload": resp_payload,
+    }
+
+    return json.dumps(response, ensure_ascii=False).encode('utf8')
