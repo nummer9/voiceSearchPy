@@ -5,15 +5,16 @@ from df_helper import make_card_response_from_product
 import logging
 
 def make_search_response(products:list, session):
-
-    product = products[0]
-    parameters = make_parameters(products)
+    """Makes a Dialogflow Response for search intents."""
 
     if len(products) == 0:
-        logging.error('no products found')
+        logging.warning('no products found')
 
         # TODO: no article found response!
         return make_no_products_response()
+    else:
+        product = products[0]
+        parameters = make_parameters(products)
 
     return make_card_response_from_product(session, product, parameters)  
 

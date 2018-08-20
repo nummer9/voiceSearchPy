@@ -3,11 +3,14 @@ import json
 
 
 def make_card_response_from_product(session:str, product:Product, parameters:list) -> str:
+    """Assembles a Dialogflow response that contains a BasicCard with
+    an image of the product."""
+    
     resp_items = [
         {
             "simpleResponse": {
                 "textToSpeech": make_text_to_speech(product),
-                "displayText": ""
+                "displayText": "gefunden auf otto.de"
             }
         }, {
             "basicCard": {
@@ -15,7 +18,15 @@ def make_card_response_from_product(session:str, product:Product, parameters:lis
                 "image": {
                     "url": product.image_url,
                     "accessibilityText": "keine Vorschau"
-                }
+                },
+                "buttons": [
+                    {
+                    "title": "auf otto.de ansehen",
+                    "openUrlAction": {
+                        "url": product.url
+                        }
+                    }
+                ]
             }
         }
     ]

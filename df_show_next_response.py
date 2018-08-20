@@ -4,6 +4,9 @@ from df_helper import make_card_response_from_product
 import json
 
 def make_show_next_response(df_req:dict) -> str:
+    """Makes a Dialogflow Response for the intent in wicht the
+    user wants to see the next article."""
+    
     session = df_req["session"]
     ctx = get_context(df_req["queryResult"]["outputContexts"],
         f'{session}/contexts/next_result')
