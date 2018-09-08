@@ -10,7 +10,7 @@ def make_card_response_from_product(session:str, product:Product, parameters:lis
         {
             "simpleResponse": {
                 "textToSpeech": make_text_to_speech(product),
-                "displayText": "gefunden auf otto.de"
+                "displayText": f'{product.price} EUR'
             }
         }, {
             "basicCard": {
@@ -62,4 +62,24 @@ def make_card_response_from_product(session:str, product:Product, parameters:lis
     return json.dumps(response, ensure_ascii=False).encode('utf8')
 
 def make_text_to_speech(product:Product) -> str:
-    return f'<speak>Gefunden auf otto D E: {product.name}. Der Artikel kostet {product.price} Euro</speak>'
+
+    # there seems to be a bug in dialogflow so that in string with an &,
+    # the <speak>-tags are spoken.
+    p_name = product.name.replace("&", " und ")\
+    .replace("inkl.", "inklusive")\
+    .replace("incl.", "inklusive")\
+    .replace("einschl.", "einschließlich")\
+    .replace("tlg.", "teilig")\
+    .replace("-tlg.", " teilig")\
+    .replace("St", "Stück")\
+    .replace("St.", "Stück")\
+    .replace("Stk", "Stück")\
+    .replace("Stk.", "Stück")\
+    .replace("U/Min", "Umdrehungen pro Minute")\
+    .replace("U/min", "Umdrehungen pro Minute")\
+    .replace("«", "'")\
+    .replace("»", "'")\
+    .replace("™", "")\
+    .replace("®", "")
+
+    return f'<speak>Gefunden auf otto D E: {p_name}. Der Artikel kostet {product.price} Euro</speak>'
